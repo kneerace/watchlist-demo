@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 //import javax.validation.constraints.NotBlank;
 
-public class Watchlistitem {
+public class WatchlistItem {
     @NotBlank(message = "Title is required")
     private String title;
     private String rating;
@@ -15,7 +15,7 @@ public class Watchlistitem {
     private String comment;
     private Integer id;
 
-    public Watchlistitem(String title, String rating, String priority, String comment, Integer id) {
+    public WatchlistItem(String title, String rating, String priority, String comment, Integer id) {
         this.title = title;
         this.rating = rating;
         this.priority = priority;
@@ -23,7 +23,7 @@ public class Watchlistitem {
         this.id = id;
     } // end constructor
 
-    public Watchlistitem(){};
+    public WatchlistItem(){};
 
     public String getTitle() {
         return title;

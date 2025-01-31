@@ -1,12 +1,10 @@
 package com.openclassrooms.watchlist;
 
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -19,7 +17,7 @@ import java.util.Map;
 @Controller
 public class WatchlistController {
 
-    private List<Watchlistitem> watchlistitems = new ArrayList<Watchlistitem>();
+    private List<WatchlistItem> watchlistItems = new ArrayList<WatchlistItem>();
     private static int index = 1;
     @GetMapping("/watchlist")
     public ModelAndView getWatchlist() {
@@ -33,8 +31,8 @@ public class WatchlistController {
         String viewName = "watchlist";
         Map<String, Object> model = new HashMap<String, Object>();
 //        System.out.println(watchlistitems); //--------
-        model.put("watchlistItems", watchlistitems);
-        model.put("numberOfMovies", watchlistitems.size());
+        model.put("watchlistItems", watchlistItems);
+        model.put("numberOfMovies", watchlistItems.size());
         return new ModelAndView(viewName, model);
     }
 
@@ -43,18 +41,18 @@ public class WatchlistController {
 
         String viewName = "watchlistItemForm";
         Map<String,Object> model = new HashMap<String,Object>();
-        Watchlistitem watchlistitem = findWatchlistItemById(id);
+        WatchlistItem watchlistitem = findWatchlistItemById(id);
         if(watchlistitem != null) {
             model.put("watchlistItem", watchlistitem);
         }
         else {
-            model.put("watchlistItem", new Watchlistitem());
+            model.put("watchlistItem", new WatchlistItem());
         }
         return new ModelAndView(viewName,model);
     } // end showWatchlistItemForm
 
-    private Watchlistitem findWatchlistItemById(Integer id) {
-            for (Watchlistitem watchlistitem : watchlistitems) {
+    private WatchlistItem findWatchlistItemById(Integer id) {
+            for (WatchlistItem watchlistitem : watchlistItems) {
                 if (watchlistitem.getId().equals(id)) {
                     return watchlistitem;
                 } // end if
@@ -63,15 +61,15 @@ public class WatchlistController {
     } // end findWatchlistItemById
 
     @PostMapping("/watchlistItemForm")
-    public ModelAndView submitWatchlistItemForm(@Validated Watchlistitem watchlistItem, BindingResult bindingResult) {
+    public ModelAndView submitWatchlistItemForm(@Validated WatchlistItem watchlistItem, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
             return new ModelAndView("watchlistItemForm");
         }
-        Watchlistitem existingWatchlistItem = findWatchlistItemById(watchlistItem.getId());
+        WatchlistItem existingWatchlistItem = findWatchlistItemById(watchlistItem.getId());
         if (existingWatchlistItem == null) {
             watchlistItem.setId(index++);
-            watchlistitems.add(watchlistItem);
+            watchlistItems.add(watchlistItem);
         }
         else {
             existingWatchlistItem.setTitle(watchlistItem.getTitle());
@@ -85,4 +83,27 @@ public class WatchlistController {
         return new ModelAndView(redirect);
 
     } // end submitWatchlistItemForm
+
+    /*@PostMapping("/watchlistItemForm")
+    public ModelAndView submitWatchlistItemForm(@Validated Watchlistitem watchlistItem, BindingResult bindingResult) {
+
+//        logger.info("HTTP POST request received at /watchlistItemForm URL ");
+
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView("watchlistItemForm");
+        }
+
+        try {
+            watchlistService.addOrUpdateWatchlistItem(watchlistItem);
+
+        } catch (DuplicateTitleException e) {
+            bindingResult.rejectValue("title", "", "This title already exists on your watchlist");
+            return new ModelAndView("watchlistItemForm");
+        }
+        RedirectView redirect = new RedirectView();
+        redirect.setUrl("/watchlist");
+        return new ModelAndView(redirect);
+    }*/
+
+
 }
