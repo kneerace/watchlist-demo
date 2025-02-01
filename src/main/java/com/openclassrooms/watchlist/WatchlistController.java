@@ -36,7 +36,7 @@ public class WatchlistController {
         return new ModelAndView(viewName, model);
     }
 
-    @GetMapping("/watchlistItemForm")
+   /* @GetMapping("/watchlistItemForm")
     public ModelAndView showWatchlistItemForm(@RequestParam(required = false) Integer id) {
 
         String viewName = "watchlistItemForm";
@@ -49,6 +49,22 @@ public class WatchlistController {
             model.put("watchlistItem", new WatchlistItem());
         }
         return new ModelAndView(viewName,model);
+    } // end showWatchlistItemForm*/
+
+    @GetMapping("/watchlistItemForm")
+    public ModelAndView showWatchlistItemForm(@RequestParam(required = false) Integer id) {
+        ModelAndView mav = new ModelAndView("watchlistItemForm");  // creating modelandview
+        WatchlistItem watchlistItem;
+        if (id != null) {
+            watchlistItem = findWatchlistItemById(id);
+            if(watchlistItem == null) {
+                return new ModelAndView("watchlistItemForm");
+            }}
+        else {
+            watchlistItem = new WatchlistItem();
+        }
+        mav.addObject("watchlistItem", watchlistItem);
+        return mav;
     } // end showWatchlistItemForm
 
     private WatchlistItem findWatchlistItemById(Integer id) {
@@ -63,9 +79,19 @@ public class WatchlistController {
     @PostMapping("/watchlistItemForm")
     public ModelAndView submitWatchlistItemForm(@Validated WatchlistItem watchlistItem, BindingResult bindingResult) {
 
-        if(bindingResult.hasErrors()){
-            return new ModelAndView("watchlistItemForm");
+        if (bindingResult.hasErrors()) {
+           /* System.out.println("BindingResult Errors:");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                System.out.println("Field: " + error.getField());
+                System.out.println("Error: " + error.getDefaultMessage());  // Get the message
+                System.out.println("Rejected Value: " + error.getRejectedValue()); // See what was submitted
+                System.out.println("--------------------");
+            }*/
+            ModelAndView mav = new ModelAndView("watchlistItemForm");
+            mav.addObject("watchlistItem", watchlistItem);
+            return mav;
         }
+
         WatchlistItem existingWatchlistItem = findWatchlistItemById(watchlistItem.getId());
         if (existingWatchlistItem == null) {
             watchlistItem.setId(index++);
@@ -84,26 +110,4 @@ public class WatchlistController {
 
     } // end submitWatchlistItemForm
 
-    /*@PostMapping("/watchlistItemForm")
-    public ModelAndView submitWatchlistItemForm(@Validated Watchlistitem watchlistItem, BindingResult bindingResult) {
-
-//        logger.info("HTTP POST request received at /watchlistItemForm URL ");
-
-        if (bindingResult.hasErrors()) {
-            return new ModelAndView("watchlistItemForm");
-        }
-
-        try {
-            watchlistService.addOrUpdateWatchlistItem(watchlistItem);
-
-        } catch (DuplicateTitleException e) {
-            bindingResult.rejectValue("title", "", "This title already exists on your watchlist");
-            return new ModelAndView("watchlistItemForm");
-        }
-        RedirectView redirect = new RedirectView();
-        redirect.setUrl("/watchlist");
-        return new ModelAndView(redirect);
-    }*/
-
-
-}
+} // end  class
