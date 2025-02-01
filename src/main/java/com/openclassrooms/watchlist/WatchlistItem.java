@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 public class WatchlistItem {
     @NotBlank(message = "Title is required")
     private String title;
+    @Rating
     private String rating;
     @Priority
     private String priority;
