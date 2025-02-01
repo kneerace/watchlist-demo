@@ -9,6 +9,7 @@ public class WatchlistItem {
     @NotBlank(message = "Title is required")
     private String title;
     private String rating;
+    @Priority
     private String priority;
 
     @Size(max = 50, message= "Comment should be maximum of 50 characters")
