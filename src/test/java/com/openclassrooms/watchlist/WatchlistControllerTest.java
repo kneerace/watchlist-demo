@@ -1,9 +1,12 @@
 package com.openclassrooms.watchlist;
 
+import com.openclassrooms.watchlist.service.WatchlistService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +22,8 @@ class WatchlistControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @MockitoBean
+    WatchlistService watchlistService;
     @Test
     void testGetWatchlist() throws Exception {
         mockMvc.perform(get("/watchlist"))
@@ -40,7 +45,10 @@ class WatchlistControllerTest {
 
     @Test
     void testSubmitWatchlistItemForm() throws Exception {
-        mockMvc.perform(post("/watchlistItemForm"))
+        mockMvc.perform(post("/watchlistItemForm")
+                        .param("title", "Lion King")
+                        .param("rating", "9.7")
+                        .param("priority", "H"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/watchlist"));
     }
