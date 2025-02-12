@@ -1,10 +1,16 @@
-package com.openclassrooms.watchlist;
+package com.openclassrooms.watchlist.domain;
 
+import com.openclassrooms.watchlist.validation.GoodMovie;
+import com.openclassrooms.watchlist.validation.Priority;
+import com.openclassrooms.watchlist.validation.Rating;
+import com.openclassrooms.watchlist.validation.ReqComment;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 
 //import javax.validation.constraints.NotBlank;
 
+@GoodMovie
+@ReqComment
 public class WatchlistItem {
     @NotBlank(message = "Title is required")
     private String title;
